@@ -2,21 +2,27 @@ import { CalculatorService } from "./calculator.service";
 import { LoggerService } from "./logger.service"; 
 
 describe('CalculatorService', () => { 
-    
-    it('should add two numbers', () => {
-      const logger = jasmine.createSpyObj('LoggerService', ["log"]);
-      const calculator = new CalculatorService(logger);
-      const result = calculator.add(2, 2);
-      expect(result).toBe(4);
-      expect(logger.log).toHaveBeenCalledTimes(1);
-    });
 
+  let calculator: CalculatorService,
+    loggerSpy: any; 
 
-    it('should subract two numbers', () => {
-       const calculator = new CalculatorService(new LoggerService());
-       const result = calculator.subtract(2, 2);
-       expect(result).toBe(0, "unexpected subraction result");
-    });
+  beforeEach(()=>{
+    loggerSpy = jasmine.createSpyObj('LoggerService', ["log"]);
+    calculator = new CalculatorService(loggerSpy);
+  });
+  
+  it('should add two numbers', () => {
+    console.log("add test");
+    const result = calculator.add(2, 2);
+    expect(result).toBe(4);
+    expect(loggerSpy.log).toHaveBeenCalledTimes(1);
+  });
 
+  it('should subract two numbers', () => {
+    console.log("subtract test");
+    const result = calculator.subtract(2, 2);
+    expect(result).toBe(0, "unexpected subraction result");
+    expect(loggerSpy.log).toHaveBeenCalledTimes(1);
+  });
 
-} );
+});
