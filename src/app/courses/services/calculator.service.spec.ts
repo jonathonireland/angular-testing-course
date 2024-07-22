@@ -3,6 +3,8 @@ import { LoggerService } from "./logger.service";
 
 describe('CalculatorService', () => { 
 
+  // TestBed.inject() instead of TestBed.get()
+
   let calculator: CalculatorService,
     loggerSpy: any; 
 
