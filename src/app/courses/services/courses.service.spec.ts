@@ -2,6 +2,7 @@ import {TestBed} from '@angular/core/testing';
 import {CoursesService} from './courses.service';
 import { HttpClientTestingModule, HttpTestingController} from '@angular/common/http/testing';
 import { COURSES } from '../../../../server/db-data';
+import { Course } from '../model/course';
 
 describe("CoursesService", ()=>{
 
@@ -21,10 +22,12 @@ describe("CoursesService", ()=>{
         httpTestingController = TestBed.inject(HttpTestingController);
     });
 
-    it('should retrieve all courses', ()=>{
+    it('should retrieve all courses', () => {
+
         coursesService.findAllCourses() // METHOD TO BE TESTED
-            .subscribe(courses => {
-                
+
+            .subscribe(courses => {    
+
                 expect(courses).toBeTruthy();
                 
                 expect(courses.length).toBe(12,
@@ -34,8 +37,8 @@ describe("CoursesService", ()=>{
                 const course = courses.find( course => course.id == 12 );
 
                 expect(course.titles.description).toBe( "Angular Testing Course" );
-
             });
+
         const req = httpTestingController.expectOne('/api/courses');
 
         expect(req.request.method).toEqual("GET");
@@ -47,13 +50,14 @@ describe("CoursesService", ()=>{
     it('should find a course by id', () => {
         
         coursesService.findCourseById(12) // METHOD TO BE TESTED
+
             .subscribe(course => {
 
                 expect(course).toBeTruthy();
 
                 expect(course.id).toBe(12);
-
             });
+
         const req = httpTestingController.expectOne('/api/courses/12');
 
         expect(req.request.method).toEqual("GET");
@@ -62,7 +66,28 @@ describe("CoursesService", ()=>{
 
     });
 
+    it('should save the course data', ()=>{
+        
+        const changes :Partial<Course> = {titles:{description:'Testing Course'}} 
 
+        coursesService.saveCourse(12, {titles:{description: 'Testing Course'}})
+        
+        .subscribe(course => {
+            expect(course.id).toBe(12);
+        });
+
+        const req = httpTestingController.expectOne('/api/courses/12');
+
+        expect(req.request.method).toEqual("PUT");
+
+        expect(req.request.body.titles.description).toEqual(changes.titles.description);
+
+        req.flush({
+            ...COURSES[12],
+            ...changes
+        })
+
+    });
 
     afterEach(()=>{
         httpTestingController.verify();
