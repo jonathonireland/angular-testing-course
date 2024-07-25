@@ -1,4 +1,4 @@
-import {async, ComponentFixture, fakeAsync, flush, flushMicrotasks, TestBed} from '@angular/core/testing';
+import {waitForAsync, ComponentFixture, fakeAsync, flush, flushMicrotasks, TestBed} from '@angular/core/testing';
 import {CoursesModule} from '../courses.module';
 import {DebugElement} from '@angular/core';
 
@@ -18,11 +18,28 @@ import {click} from '../common/test-utils';
 
 describe('HomeComponent', () => {
 
-  let fixture: ComponentFixture<HomeComponent>;
-  let component:HomeComponent;
-  let el: DebugElement;
+  let fixture: ComponentFixture<HomeComponent>,
+  component:HomeComponent,
+  el: DebugElement;
 
-  beforeEach((() => {
+  beforeEach(waitForAsync(() => {
+
+    const coursesServiceSpy = jasmine.createSpyObj('CoursesService', ['findAllCourses']); 
+
+    TestBed.configureTestingModule({
+      imports:[
+        CoursesModule,
+        NoopAnimationsModule
+      ],
+      providers: [
+        {provide: CoursesService, useValue: coursesServiceSpy}
+      ]
+    }).compileComponents()
+    .then(()=>{
+      fixture = TestBed.createComponent(HomeComponent);
+      component = fixture.componentInstance;
+      el = fixture.debugElement;
+    });
 
 
   }));
