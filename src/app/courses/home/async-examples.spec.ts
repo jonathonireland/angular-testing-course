@@ -41,4 +41,32 @@ fdescribe("Async Testing Examples", () => {
    
     }));
 
+
+
+    fit("Asynchronous test example - plain Promise", () => { 
+        let test = false;
+        console.log("creating promise");
+
+        setTimeout(()=>{
+            console.log('setTimeout() first callback triggered.');
+        });
+
+        setTimeout(()=>{
+            console.log('setTimeout() second callback triggered.');
+        });
+
+        Promise.resolve().then(() => {
+            console.log("Promise evaluated successfully");
+            test = true;
+            return Promise.resolve();
+        }).then(()=>{
+            console.log("Promise first then() evaluated successfully");
+            test = true;
+        });
+
+        console.log('Running test assertions');
+        expect(test).toBeTruthy();
+    });
+
+
 });
