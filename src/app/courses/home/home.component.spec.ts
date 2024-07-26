@@ -94,11 +94,11 @@ describe('HomeComponent', () => {
     coursesService.findAllCourses.and.returnValue(of(setupCourses()));
     fixture.detectChanges();
     const tabs = el.queryAll(By.css(".mdc-tab"));
+    // user interaction
     click(tabs[1]);
     fixture.detectChanges();
 
-    tick(500);
-    fixture.detectChanges();
+    flush();
 
     const cardTitles = el.queryAll(By.css('.mat-mdc-card-title'));
 
